@@ -20,7 +20,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
-Release: cp1
+Release: cp2
 
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -228,9 +228,22 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
     system >/dev/null || :
 fi
 
+# Remove with EA3
+# Stopgap measure to ensure that the cPanel interface for PEAR works
+# on new servers that never had EA3 installed.
+if [ ! -e "/usr/local/bin/pear" ]; then
+    ln -s %{_bindir}/pear /usr/local/bin/pear;
+fi
+
 %postun
 if [ $1 -eq 0 -a -d %{metadir}/.registry ] ; then
   rm -rf %{metadir}/.registry
+fi
+
+# Remove with EA3
+if [ $1 -eq 0 -a -h "/usr/local/bin/pear" -a "$(readlink /usr/local/bin/pear)" = "%{_bindir}/pear" ]; then
+    echo "Removing pear symlink: /usr/local/bin/pear";
+    rm /usr/local/bin/pear;
 fi
 
 %files
@@ -265,5 +278,8 @@ fi
 %{_datadir}/pear-data
 
 %changelog
-* Mon May 16 2016 Rishwanth Yeddula <rish@cpanel.net> 1:1.10.1-cp1
+* Tue May 31 2016 Rishwanth Yeddula <rish@cpanel.net> 1.10.1-cp2
+- Create a symlink to the 'pear' script at /usr/local/bin/pear
+
+* Mon May 16 2016 Rishwanth Yeddula <rish@cpanel.net> 1.10.1-cp1
 - Initial implementation of PEAR/PECL for EA4 SCL-PHP package
