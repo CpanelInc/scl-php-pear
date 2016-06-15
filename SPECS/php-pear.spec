@@ -20,7 +20,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
-Release: cp2
+Release: cp3
 
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -132,6 +132,7 @@ pwd
          install-pear.php --force \
                  --dir      %{peardir} \
                  --cache    %{_localstatedir}/cache/php-pear \
+                 --download %{_localstatedir}/tmp/php-pear/cache \
                  --config   %{_sysconfdir}/pear \
                  --bin      %{_bindir} \
                  --www      %{_localstatedir}/www/html \
@@ -278,6 +279,9 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Wed Jun 15 2016 Rishwanth Yeddula <rish@cpanel.net> 1.10.1-cp3
+- Set 'download_dir' to a SCL path instead of using /tmp
+
 * Tue May 31 2016 Rishwanth Yeddula <rish@cpanel.net> 1.10.1-cp2
 - Create a symlink to the 'pear' script at /usr/local/bin/pear
 
