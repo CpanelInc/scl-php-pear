@@ -20,7 +20,9 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
-Release: cp3
+# Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
+%define release_prefix 4
+Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -279,6 +281,9 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Mon Jun 20 2016 Dan Muey <dan@cpanel.net> - 1.10.1-4
+- EA-4383: Update Release value to OBS-proof versioning
+
 * Wed Jun 15 2016 Rishwanth Yeddula <rish@cpanel.net> 1.10.1-cp3
 - Set 'download_dir' to a SCL path instead of using /tmp
 
