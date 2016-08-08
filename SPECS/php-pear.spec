@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 4
+%define release_prefix 5
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -281,6 +281,9 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Mon Aug 02 2016 Edwin Buck <e.buck@cpanel.net> - 1.10.1-5
+- EA-4954: Add support for php71 (beta)
+
 * Mon Jun 20 2016 Dan Muey <dan@cpanel.net> - 1.10.1-4
 - EA-4383: Update Release value to OBS-proof versioning
 
