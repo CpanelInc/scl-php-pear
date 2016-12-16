@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 5
+%define release_prefix 6
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -30,7 +30,7 @@ Release: %{release_prefix}%{?dist}.cpanel
 License: BSD and PHP and LGPLv2+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
-
+Vendor: cPanel, Inc.
 Source0: PEAR-1.10.1.tgz
 # wget https://raw.github.com/pear/pear-core/master/install-pear.php
 Source1: install-pear.php
@@ -281,6 +281,9 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Fri Dec 16 2016 Jacob Perkins <jacob.perkins@cpanel.net> - 1.10.1-6
+- EA-5493: Added vendor field
+
 * Mon Aug 02 2016 Edwin Buck <e.buck@cpanel.net> - 1.10.1-5
 - EA-4954: Add support for php71 (beta)
 
