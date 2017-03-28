@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 6
+%define release_prefix 7
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -231,6 +231,10 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
     system >/dev/null || :
 fi
 
+%{_bindir}/pear config-set \
+    php_ini %{_scl_root}/etc/php.d/local.ini \
+    system >/dev/null || :
+
 # Remove with EA3
 # Stopgap measure to ensure that the cPanel interface for PEAR works
 # on new servers that never had EA3 installed.
@@ -281,10 +285,13 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Thu Mar 23 2017 Jeffrey Royer <jeffrey.royer@cpanel.net> - 1.10.1-7
+- PIG-2903: Enable PECL extensions by default
+
 * Fri Dec 16 2016 Jacob Perkins <jacob.perkins@cpanel.net> - 1.10.1-6
 - EA-5493: Added vendor field
 
-* Mon Aug 02 2016 Edwin Buck <e.buck@cpanel.net> - 1.10.1-5
+* Tue Aug 02 2016 Edwin Buck <e.buck@cpanel.net> - 1.10.1-5
 - EA-4954: Add support for php71 (beta)
 
 * Mon Jun 20 2016 Dan Muey <dan@cpanel.net> - 1.10.1-4
