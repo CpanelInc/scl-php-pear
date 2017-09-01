@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 8
+%define release_prefix 9
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -232,7 +232,7 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
 fi
 
 %{_bindir}/pear config-set \
-    php_ini %{_scl_root}/etc/php.d/local.ini \
+    php_ini %{_scl_root}/etc/php.ini \
     system >/dev/null || :
 
 # Remove with EA3
@@ -285,7 +285,10 @@ fi
 %{_datadir}/pear-data
 
 %changelog
-* Thu Aug 24 2017 298 * Mon Jun 20 2016 Dan Muey <dan@cpanel.net> - 1.10.1-8
+* Thu Aug 30 2017 Dan Muey <dan@cpanel.net> - 1.10.1-9
+- ZC-2834: Stop using local.ini
+
+* Thu Aug 24 2017 Dan Muey <dan@cpanel.net> - 1.10.1-8
 - ZC-2819: Add support for php 7.2
 
 * Thu Mar 23 2017 Jeffrey Royer <jeffrey.royer@cpanel.net> - 1.10.1-7
