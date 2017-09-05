@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 7
+%define release_prefix 9
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -41,7 +41,7 @@ Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
 
-Source21: Archive_Tar-1.4.2.tgz
+Source21: Archive_Tar-1.4.3.tgz
 Source22: Console_Getopt-1.4.1.tgz
 Source23: Structures_Graph-1.1.1.tgz
 Source24: XML_Util-1.3.0.tgz
@@ -70,7 +70,7 @@ Requires:  %{?scl_prefix}php-zlib
 Requires:  %{?scl_prefix}php-devel
 
 Provides:  %{?scl_prefix}php-pear(Console_Getopt) = 1.4.1
-Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.2
+Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.3
 Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.1
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
 Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.3.0
@@ -232,7 +232,7 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
 fi
 
 %{_bindir}/pear config-set \
-    php_ini %{_scl_root}/etc/php.d/local.ini \
+    php_ini %{_scl_root}/etc/php.ini \
     system >/dev/null || :
 
 # Remove with EA3
@@ -285,6 +285,12 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Thu Aug 30 2017 Dan Muey <dan@cpanel.net> - 1.10.1-9
+- ZC-2834: Stop using local.ini
+
+* Thu Aug 24 2017 Dan Muey <dan@cpanel.net> - 1.10.1-8
+- ZC-2819: Add support for php 7.2
+
 * Thu Mar 23 2017 Jeffrey Royer <jeffrey.royer@cpanel.net> - 1.10.1-7
 - PIG-2903: Enable PECL extensions by default
 
