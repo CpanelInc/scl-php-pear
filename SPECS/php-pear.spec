@@ -237,7 +237,7 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
 fi
 
 %{_bindir}/pear config-set \
-    php_ini %{_scl_root}/etc/php.ini \
+    php_ini %{_scl_root}/etc/php.d/02-pecl.ini \
     system >/dev/null || :
 
 # Remove with EA3
