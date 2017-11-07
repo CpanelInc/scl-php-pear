@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 9
+%define release_prefix 10
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -123,7 +123,8 @@ install -d $RPM_BUILD_ROOT%{peardir} \
            $RPM_BUILD_ROOT%{metadir}/pkgxml \
            $RPM_BUILD_ROOT%{_docdir}/pecl \
            $RPM_BUILD_ROOT%{_datadir}/tests/pecl \
-           $RPM_BUILD_ROOT%{_sysconfdir}/pear
+           $RPM_BUILD_ROOT%{_sysconfdir}/pear \
+           $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 
 export INSTALL_ROOT=$RPM_BUILD_ROOT
 pwd
@@ -147,6 +148,10 @@ pwd
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
 install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
 install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
+
+# Need to touch pecl.ini so it can write to it
+touch $RPM_BUILD_ROOT%{_sysconfdir}/php.d/02-pecl.ini
+
 # Fix path in SCL
 for exe in pear pecl peardev; do
     sed -e 's:/usr:%{_prefix}:' \
@@ -232,7 +237,7 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
 fi
 
 %{_bindir}/pear config-set \
-    php_ini %{_scl_root}/etc/php.ini \
+    php_ini %{_scl_root}/etc/php.d/02-pecl.ini \
     system >/dev/null || :
 
 # Remove with EA3
@@ -273,6 +278,7 @@ fi
 %dir %{_localstatedir}/cache/php-pear
 %dir %{_localstatedir}/tmp/php-pear
 %dir %{_sysconfdir}/pear
+%attr(0664,root,root) %config(noreplace) %{_sysconfdir}/php.d/02-pecl.ini
 %{!?_licensedir:%global license %%doc}
 %license LICENSE*
 %doc README*
@@ -285,6 +291,9 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Thu Nov 02 2017  Dan Muey <dan@cpanel.net> - 1.10.1-10
+- EA-6910: Move pecl's php.ini to php.d/02-pecl.ini so it loads after 01-ioncube.ini
+
 * Thu Aug 30 2017 Dan Muey <dan@cpanel.net> - 1.10.1-9
 - ZC-2834: Stop using local.ini
 
