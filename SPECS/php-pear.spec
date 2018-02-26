@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 10
+%define release_prefix 11
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -150,7 +150,7 @@ install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
 install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 
 # Need to touch pecl.ini so it can write to it
-touch $RPM_BUILD_ROOT%{_sysconfdir}/php.d/02-pecl.ini
+touch $RPM_BUILD_ROOT%{_sysconfdir}/php.d/zzzzzzz-pecl.ini
 
 # Fix path in SCL
 for exe in pear pecl peardev; do
@@ -237,8 +237,15 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
 fi
 
 %{_bindir}/pear config-set \
-    php_ini %{_scl_root}/etc/php.d/02-pecl.ini \
+    php_ini %{_scl_root}/etc/php.d/zzzzzzz-pecl.ini \
     system >/dev/null || :
+
+# preserve local pear INI on file name change (Note that .rpmsave won't exist at this point)
+if [ $1 -eq 2 -a "%{version}-%{release_prefix}" == "1.10.1-11" -a -s %{_scl_root}/etc/php.d/02-pecl.ini ] ; then
+    echo "Preserving INI from 02-pecl.ini to zzzzzzz-pecl.ini";
+    cp -f %{_scl_root}/etc/php.d/02-pecl.ini %{_scl_root}/etc/php.d/zzzzzzz-pecl.ini;
+    echo -n "" >  %{_scl_root}/etc/php.d/02-pecl.ini; # preserving times does not avoid .rpmsave since those changed when data was added post-install :/
+fi
 
 # Remove with EA3
 # Stopgap measure to ensure that the cPanel interface for PEAR works
@@ -278,7 +285,7 @@ fi
 %dir %{_localstatedir}/cache/php-pear
 %dir %{_localstatedir}/tmp/php-pear
 %dir %{_sysconfdir}/pear
-%attr(0664,root,root) %config(noreplace) %{_sysconfdir}/php.d/02-pecl.ini
+%attr(0664,root,root) %config(noreplace) %{_sysconfdir}/php.d/zzzzzzz-pecl.ini
 %{!?_licensedir:%global license %%doc}
 %license LICENSE*
 %doc README*
@@ -291,6 +298,9 @@ fi
 %{_datadir}/pear-data
 
 %changelog
+* Mon Feb 26 2018 Daniel Muey <dan@cpanel.net> - 1.10.1-11
+- EA-7252: Load PECL ini after PHP ini so that expected symbols will be available
+
 * Thu Nov 02 2017  Dan Muey <dan@cpanel.net> - 1.10.1-10
 - EA-6910: Move pecl's php.ini to php.d/02-pecl.ini so it loads after 01-ioncube.ini
 
