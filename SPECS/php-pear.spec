@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 11
+%define release_prefix 12
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -148,6 +148,11 @@ pwd
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
 install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
 install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
+
+# Create symlinks to /usr/bin/ea-php##-pear
+install -d $RPM_BUILD_ROOT/usr/bin
+ln -sf %{_bindir}/pear $RPM_BUILD_ROOT/usr/bin/%{scl}-pear
+ln -sf %{_bindir}/pecl $RPM_BUILD_ROOT/usr/bin/%{scl}-pecl
 
 # Need to touch pecl.ini so it can write to it
 touch $RPM_BUILD_ROOT%{_sysconfdir}/php.d/zzzzzzz-pecl.ini
@@ -296,8 +301,14 @@ fi
 %dir %{_datadir}/tests/pecl
 %{_datadir}/tests/pear
 %{_datadir}/pear-data
+# adding ea-php##-pear and ea-php##-pecl symlinks
+/usr/bin/%{scl}-pear
+/usr/bin/%{scl}-pecl
 
 %changelog
+* Fri Apr 27 2018 Cory McIntire <cory@cpanel.net> - 1.10.1-12
+- ZC-3484: Create symlinks in /usr/bin for ea-php##-pear and ea-php##-pecl
+
 * Mon Feb 26 2018 Daniel Muey <dan@cpanel.net> - 1.10.1-11
 - EA-7252: Load PECL ini after PHP ini so that expected symbols will be available
 
