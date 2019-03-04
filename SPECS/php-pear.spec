@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.1
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 12
+%define release_prefix 13
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -306,6 +306,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Tue Feb 05 2019 Daniel Muey <dan@cpanel.net> - 1.10.1-13
+- ZC-4640: Add PHP 7.3
+
 * Fri Apr 27 2018 Cory McIntire <cory@cpanel.net> - 1.10.1-12
 - ZC-3484: Create symlinks in /usr/bin for ea-php##-pear and ea-php##-pecl
 
