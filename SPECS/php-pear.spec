@@ -19,9 +19,9 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
-Version: 1.10.1
+Version: 1.10.7
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 13
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -31,7 +31,7 @@ License: BSD and PHP and LGPLv2+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
 Vendor: cPanel, Inc.
-Source0: PEAR-1.10.1.tgz
+Source0: PEAR-1.10.7.tgz
 # wget https://raw.github.com/pear/pear-core/master/install-pear.php
 Source1: install-pear.php
 Source3: strip.php
@@ -40,11 +40,12 @@ Source3: strip.php
 Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
+Source13: c6headers.sh
 
-Source21: Archive_Tar-1.4.3.tgz
+Source21: Archive_Tar-1.4.5.tgz
 Source22: Console_Getopt-1.4.1.tgz
 Source23: Structures_Graph-1.1.1.tgz
-Source24: XML_Util-1.3.0.tgz
+Source24: XML_Util-1.4.3.tgz
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -74,6 +75,11 @@ Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.3
 Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.1
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
 Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.3.0
+
+# Require our autoconf for C6 and PHP 7.3 compat
+%if ( 0%{rhel} < 7 && "0%{scl}" == "ea-php73" )
+Requires: autotools-latest-autoconf
+%endif
 
 %description
 PEAR/PECL is a framework and distribution system for reusable PHP
@@ -146,7 +152,14 @@ pwd
                  %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
 
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
+
+# Set up autoconf and autoheader for PHP73 and C6 use
+%if ( 0%{rhel} < 7 && "0%{scl}" == "ea-php73" )
+%{__cat} %{SOURCE13} %{SOURCE11} > $RPM_BUILD_ROOT%{_bindir}/pecl
+%else
 install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
+%endif
+
 install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 
 # Create symlinks to /usr/bin/ea-php##-pear
@@ -306,6 +319,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Wed Mar 06 2019 Cory McIntire <cory@cpanel.net> - 1.10.7-1
+- EA-8226: Updating PECL/PEAR and adding compat fixes for C6 and PHP73
+
 * Tue Feb 05 2019 Daniel Muey <dan@cpanel.net> - 1.10.1-13
 - ZC-4640: Add PHP 7.3
 

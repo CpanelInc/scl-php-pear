@@ -1,4 +1,5 @@
 #!/bin/sh
+
 exec /usr/bin/php -C \
     -d include_path=/usr/share/pear \
     -d date.timezone=UTC \
