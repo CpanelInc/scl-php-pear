@@ -77,7 +77,7 @@ Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
 Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.3.0
 
 # Require our autoconf for C6 and PHP 7.3 compat
-%if ( 0%{rhel} < 7 && 0%{scl} == "ea-php73" )
+%if ( %{rhel} < 7 && "%{scl}" == "ea-php73" )
 Requires: autotools-latest-autoconf
 %endif
 
@@ -154,7 +154,7 @@ pwd
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
 
 # Set up autoconf and autoheader for PHP73 and C6 use
-%if ( 0%{rhel} < 7 && 0%{scl} == "ea-php73" )
+%if ( %{rhel} < 7 && "%{scl}" == "ea-php73" )
 %{__cat} %{SOURCE13} %{SOURCE11} > $RPM_BUILD_ROOT%{_bindir}/pecl
 %else
 install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
