@@ -172,7 +172,7 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/php.d/zzzzzzz-pecl.ini
 
 # Fix path in SCL
 for exe in pear pecl peardev; do
-    sed -e 's:/usr:%{_prefix}:' \
+    sed -e 's: /usr: %{_prefix}:' \
         -i $RPM_BUILD_ROOT%{_bindir}/$exe
 done
 
