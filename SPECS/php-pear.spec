@@ -49,16 +49,16 @@ Source24: XML_Util-1.4.3.tgz
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-#BuildRequires: %{?scl_prefix}php-cli
-#BuildRequires: %{?scl_prefix}php-xml
+BuildRequires: %{?scl_prefix}php-cli
+BuildRequires: %{?scl_prefix}php-xml
 BuildRequires: gnupg
 
 # phpci detected extension
 # PEAR (date, spl always builtin):
-#Requires:  %{?scl_prefix}php-cli
+Requires:  %{?scl_prefix}php-cli
 Requires:  %{?scl_prefix}php-ftp
 Requires:  %{?scl_prefix}php-tokenizer
-#Requires:  %{?scl_prefix}php-xml
+Requires:  %{?scl_prefix}php-xml
 
 # XML_Util: pcre
 # Console_Getopt: pcre
