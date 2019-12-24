@@ -337,7 +337,7 @@ fi
 * Thu Nov 02 2017  Dan Muey <dan@cpanel.net> - 1.10.1-10
 - EA-6910: Move pecl's php.ini to php.d/02-pecl.ini so it loads after 01-ioncube.ini
 
-* Thu Aug 30 2017 Dan Muey <dan@cpanel.net> - 1.10.1-9
+* Wed Aug 30 2017 Dan Muey <dan@cpanel.net> - 1.10.1-9
 - ZC-2834: Stop using local.ini
 
 * Thu Aug 24 2017 Dan Muey <dan@cpanel.net> - 1.10.1-8
