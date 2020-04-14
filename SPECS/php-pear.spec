@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.7
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -319,6 +319,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Tue Dec 24 2019 Daniel Muey <dan@cpanel.net> - 1.10.7-2
+- ZC-5915: Add PHP 7.4
+
 * Wed Mar 06 2019 Cory McIntire <cory@cpanel.net> - 1.10.7-1
 - EA-8226: Updating PECL/PEAR and adding compat fixes for C6 and PHP73
 
@@ -334,7 +337,7 @@ fi
 * Thu Nov 02 2017  Dan Muey <dan@cpanel.net> - 1.10.1-10
 - EA-6910: Move pecl's php.ini to php.d/02-pecl.ini so it loads after 01-ioncube.ini
 
-* Thu Aug 30 2017 Dan Muey <dan@cpanel.net> - 1.10.1-9
+* Wed Aug 30 2017 Dan Muey <dan@cpanel.net> - 1.10.1-9
 - ZC-2834: Stop using local.ini
 
 * Thu Aug 24 2017 Dan Muey <dan@cpanel.net> - 1.10.1-8
