@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.7
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -77,7 +77,7 @@ Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
 Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.3.0
 
 # Require our autoconf for C6 and PHP 7.3 compat
-%if ( %{rhel} < 7 && "%{scl}" == "ea-php73" )
+%if ( %{rhel} < 7 && ( "%{scl}" == "ea-php73" || "%{scl}" == "ea-php74" ) )
 Requires: autotools-latest-autoconf
 %endif
 
@@ -319,6 +319,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Mon May 04 2020 Tim Mullin <tim@cpanel.net> - 1.10.7-3
+- EA-9050: Ensure autotools-latest-autoconf is also required by ea-php74
+
 * Tue Dec 24 2019 Daniel Muey <dan@cpanel.net> - 1.10.7-2
 - ZC-5915: Add PHP 7.4
 
