@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.7
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 3
+%define release_prefix 4
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -319,6 +319,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Thu Jun 04 2020 Julian Brown <julian.brown@cpanel.net> - 1.10.7-4
+- ZC-6950: Build on C8
+
 * Mon May 04 2020 Tim Mullin <tim@cpanel.net> - 1.10.7-3
 - EA-9050: Ensure autotools-latest-autoconf is also required by ea-php74
 
