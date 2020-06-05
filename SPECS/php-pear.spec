@@ -47,6 +47,8 @@ Source22: Console_Getopt-1.4.1.tgz
 Source23: Structures_Graph-1.1.1.tgz
 Source24: XML_Util-1.4.3.tgz
 
+Source30: sanity_check.sh
+
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-cli
@@ -101,6 +103,8 @@ do
                         || mv package.xml  ${file%%-*}.xml
 done
 cp %{SOURCE1} .
+cp %{SOURCE30} sanity_check.sh
+chmod a+x sanity_check.sh
 
 %build
 # This is an empty build section.
@@ -191,11 +195,16 @@ install -m 644 *.xml $RPM_BUILD_ROOT%{metadir}/pkgxml
 %check
 # Check that no bogus paths are left in the configuration, or in
 # the generated registry files.
+%if %{rhel} < 8
 grep $RPM_BUILD_ROOT $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep %{_libdir} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep '"/tmp"' $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep /usr/local $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep -rl $RPM_BUILD_ROOT $RPM_BUILD_ROOT && exit 1
+%else
+# IN C8 rpmbuild, if any of the commands return non-zero it fails the check
+sh -x sanity_check.sh $RPM_BUILD_ROOT %{_sysconfdir} %{_libdir}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
