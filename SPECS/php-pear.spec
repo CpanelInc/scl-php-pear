@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.7
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 3
+%define release_prefix 4
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -46,6 +46,8 @@ Source21: Archive_Tar-1.4.5.tgz
 Source22: Console_Getopt-1.4.1.tgz
 Source23: Structures_Graph-1.1.1.tgz
 Source24: XML_Util-1.4.3.tgz
+
+Source30: sanity_check.sh
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -101,6 +103,8 @@ do
                         || mv package.xml  ${file%%-*}.xml
 done
 cp %{SOURCE1} .
+cp %{SOURCE30} sanity_check.sh
+chmod a+x sanity_check.sh
 
 %build
 # This is an empty build section.
@@ -191,11 +195,16 @@ install -m 644 *.xml $RPM_BUILD_ROOT%{metadir}/pkgxml
 %check
 # Check that no bogus paths are left in the configuration, or in
 # the generated registry files.
+%if %{rhel} < 8
 grep $RPM_BUILD_ROOT $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep %{_libdir} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep '"/tmp"' $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep /usr/local $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf && exit 1
 grep -rl $RPM_BUILD_ROOT $RPM_BUILD_ROOT && exit 1
+%else
+# IN C8 rpmbuild, if any of the commands return non-zero it fails the check
+sh -x sanity_check.sh $RPM_BUILD_ROOT %{_sysconfdir} %{_libdir}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -319,6 +328,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Thu Jun 04 2020 Julian Brown <julian.brown@cpanel.net> - 1.10.7-4
+- ZC-6950: Build on C8
+
 * Mon May 04 2020 Tim Mullin <tim@cpanel.net> - 1.10.7-3
 - EA-9050: Ensure autotools-latest-autoconf is also required by ea-php74
 
