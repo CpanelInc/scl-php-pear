@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.7
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 4
+%define release_prefix 5
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -328,6 +328,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Mon Nov 30 2020 Daniel Muey <dan@cpanel.net> - 1.10.7-5
+- ZC-7880: Move PHP 8.0 to production
+
 * Thu Jun 04 2020 Julian Brown <julian.brown@cpanel.net> - 1.10.7-4
 - ZC-6950: Build on C8
 
