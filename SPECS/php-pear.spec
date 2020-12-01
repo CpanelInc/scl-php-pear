@@ -19,9 +19,9 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
-Version: 1.10.7
+Version: 1.10.12
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 4
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -31,7 +31,7 @@ License: BSD and PHP and LGPLv2+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
 Vendor: cPanel, Inc.
-Source0: PEAR-1.10.7.tgz
+Source0: PEAR-%{version}.tgz
 # wget https://raw.github.com/pear/pear-core/master/install-pear.php
 Source1: install-pear.php
 Source3: strip.php
@@ -42,10 +42,10 @@ Source11: pecl.sh
 Source12: peardev.sh
 Source13: c6headers.sh
 
-Source21: Archive_Tar-1.4.5.tgz
-Source22: Console_Getopt-1.4.1.tgz
+Source21: Archive_Tar-1.4.9.tgz
+Source22: Console_Getopt-1.4.3.tgz
 Source23: Structures_Graph-1.1.1.tgz
-Source24: XML_Util-1.4.3.tgz
+Source24: XML_Util-1.4.5.tgz
 
 Source30: sanity_check.sh
 
@@ -72,11 +72,11 @@ Requires:  %{?scl_prefix}php-posix
 Requires:  %{?scl_prefix}php-zlib
 Requires:  %{?scl_prefix}php-devel
 
-Provides:  %{?scl_prefix}php-pear(Console_Getopt) = 1.4.1
-Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.3
-Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.1
+Provides:  %{?scl_prefix}php-pear(Console_Getopt) = 1.4.3
+Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.9
+Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.12
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
-Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.3.0
+Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.4.5
 
 # Require our autoconf for C6 and PHP 7.3 compat
 %if ( %{rhel} < 7 && ( "%{scl}" == "ea-php73" || "%{scl}" == "ea-php74" ) )
@@ -328,6 +328,12 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Tue Dec 01 2020 Daniel Muey <dan@cpanel.net> - 1.10.12-1
+- ZC-7880: Update Pear and a few modules
+
+* Mon Nov 30 2020 Daniel Muey <dan@cpanel.net> - 1.10.7-5
+- ZC-7880: Move PHP 8.0 to production
+
 * Thu Jun 04 2020 Julian Brown <julian.brown@cpanel.net> - 1.10.7-4
 - ZC-6950: Build on C8
 
