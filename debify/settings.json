@@ -1,0 +1,18 @@
+{
+    "source_tarball_regex": "PEAR",
+    "add_to_build_requires": [
+        "libargon2-1",
+        "libargon2-dev",
+        "libedit-dev",
+        "libedit2"
+    ],
+    "remove_from_requires": [
+        "scl-utils-build",
+        "scl-utils",
+        "autotools-latest-autoconf",
+        "%scl_runtime"
+    ],
+    "add_to_sources": [
+        "PEAR*.tgz"
+    ]
+}
