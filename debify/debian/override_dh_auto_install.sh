@@ -4,7 +4,7 @@ source debian/vars.sh
 
 set -x
 
-mkdir $DEB_INSTALL_ROOT/
+mkdir -p $DEB_INSTALL_ROOT/
 
 export phpbin=/opt/cpanel/$scl_name/root/usr/bin/php
 
@@ -71,12 +71,16 @@ rm -rf $DEB_INSTALL_ROOT/.depdb* $DEB_INSTALL_ROOT/.lock $DEB_INSTALL_ROOT/.chan
 # Need for re-registrying XML_Util
 install -m 644 *.xml $DEB_INSTALL_ROOT$metadir/pkgxml
 
-cp $DEB_INSTALL_ROOT$_bindir/pear .
-cp $DEB_INSTALL_ROOT$_bindir/pecl .
-cp $DEB_INSTALL_ROOT$_bindir/peardev .
-cp $DEB_INSTALL_ROOT$_sysconfdir/pear.conf .
-cp $DEB_INSTALL_ROOT$_sysconfdir/php.d/zzzzzzz-pecl.ini .
-cp ./docs/Archive_Tar.txt .
+# Move the files where the install file thinks they should be
+
+mkdir -p ./debian/tmp/usr/share/doc/ea-php74-pear-$version
+mkdir -p ./debian/tmp/usr/share/licenses/ea-php74-pear-$version
+mkdir -p ./debian/tmp/var/cache/php-pear
+mkdir -p ./debian/tmp/var/tmp/php-pear
+
+cp -n ./debian/tmp/usr/share/doc/pear/PEAR/README.rst ./debian/tmp/usr/share/doc/ea-php74-pear-$version/README.rst
+cp -n ./LICENSE* ./debian/tmp/usr/share/licenses/ea-php74-pear-$version
+
 
 
 echo "FILELIST"

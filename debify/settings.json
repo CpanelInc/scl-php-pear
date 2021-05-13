@@ -14,5 +14,10 @@
     ],
     "add_to_sources": [
         "PEAR*.tgz"
+    ],
+    "dont_relativise_ontar": 1,
+    "adjust_install_file_src": [
+        [ "opt\/cpanel\/ea-php74\/root", "" ],
+        [ "^\/var\/lib\/pear", "debian\/tmp\/var\/cpanel\/lib\/pear" ]
     ]
 }
