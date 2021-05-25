@@ -73,13 +73,13 @@ install -m 644 *.xml $DEB_INSTALL_ROOT$metadir/pkgxml
 
 # Move the files where the install file thinks they should be
 
-mkdir -p ./debian/tmp/usr/share/doc/ea-php74-pear-$version
-mkdir -p ./debian/tmp/usr/share/licenses/ea-php74-pear-$version
+mkdir -p ./debian/tmp/usr/share/doc/$scl_name-pear-$version
+mkdir -p ./debian/tmp/usr/share/licenses/$scl_name-pear-$version
 mkdir -p ./debian/tmp/var/cache/php-pear
 mkdir -p ./debian/tmp/var/tmp/php-pear
 
-cp -n ./debian/tmp/usr/share/doc/pear/PEAR/README.rst ./debian/tmp/usr/share/doc/ea-php74-pear-$version/README.rst
-cp -n ./LICENSE* ./debian/tmp/usr/share/licenses/ea-php74-pear-$version
+cp -n ./debian/tmp/usr/share/doc/pear/PEAR/README.rst ./debian/tmp/usr/share/doc/$scl_name-pear-$version/README.rst
+cp -n ./LICENSE* ./debian/tmp/usr/share/licenses/$scl_name-pear-$version
 
 
 
