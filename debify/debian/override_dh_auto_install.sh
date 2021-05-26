@@ -59,7 +59,7 @@ ln -sf $_bindir/pecl $DEB_INSTALL_ROOT/usr/bin/$scl-pecl
 touch $DEB_INSTALL_ROOT$_sysconfdir/php.d/zzzzzzz-pecl.ini
 # Fix path in SCL
 for exe in pear pecl peardev; do
-    sed -e 's: /usr: $_prefix:' \
+    sed -e "s: /usr: $_prefix:" \
         -i $DEB_INSTALL_ROOT$_bindir/$exe
 done
 # Sanitize the pear.conf
