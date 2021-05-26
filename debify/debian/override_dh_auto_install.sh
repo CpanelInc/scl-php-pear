@@ -59,7 +59,7 @@ ln -sf $_bindir/pecl $DEB_INSTALL_ROOT/usr/bin/$scl-pecl
 touch $DEB_INSTALL_ROOT$_sysconfdir/php.d/zzzzzzz-pecl.ini
 # Fix path in SCL
 for exe in pear pecl peardev; do
-    sed -e 's: /usr: $_prefix:' \
+    sed -e "s: /usr: $_prefix:" \
         -i $DEB_INSTALL_ROOT$_bindir/$exe
 done
 # Sanitize the pear.conf
@@ -73,13 +73,13 @@ install -m 644 *.xml $DEB_INSTALL_ROOT$metadir/pkgxml
 
 # Move the files where the install file thinks they should be
 
-mkdir -p ./debian/tmp/usr/share/doc/$scl_name-pear-$version
-mkdir -p ./debian/tmp/usr/share/licenses/$scl_name-pear-$version
-mkdir -p ./debian/tmp/var/cache/php-pear
-mkdir -p ./debian/tmp/var/tmp/php-pear
+mkdir -p ./debian/tmp/$_scl_root/usr/share/doc/$scl_name-pear-$version
+mkdir -p ./debian/tmp/$_scl_root/usr/share/licenses/$scl_name-pear-$version
+mkdir -p ./debian/tmp/$_scl_root/var/cache/php-pear
+mkdir -p ./debian/tmp/$_scl_root/var/tmp/php-pear
 
-cp -n ./debian/tmp/usr/share/doc/pear/PEAR/README.rst ./debian/tmp/usr/share/doc/$scl_name-pear-$version/README.rst
-cp -n ./LICENSE* ./debian/tmp/usr/share/licenses/$scl_name-pear-$version
+cp -n ./debian/tmp/$_scl_root/usr/share/doc/pear/PEAR/README.rst ./debian/tmp/$_scl_root/usr/share/doc/$scl_name-pear-$version/README.rst
+cp -n ./LICENSE* ./debian/tmp/$_scl_root/usr/share/licenses/$scl_name-pear-$version
 
 
 
