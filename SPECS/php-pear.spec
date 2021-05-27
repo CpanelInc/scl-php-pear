@@ -49,6 +49,10 @@ Source24: XML_Util-1.4.5.tgz
 
 Source30: sanity_check.sh
 
+Source31: pkg.preinst
+Source32: pkg.postinst
+Source33: pkg.postrm
+
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-cli
@@ -211,61 +215,10 @@ rm -rf $RPM_BUILD_ROOT
 rm new-pear.conf
 
 %pre
-# Manage relocation of metadata, before update to pear
-if [ -d %{peardir}/.registry -a ! -d %{metadir}/.registry ]; then
-  mkdir -p %{metadir}
-  mv -f %{peardir}/.??* %{metadir}
-fi
+%include ${SOURCE31}
 
 %post
-# force new value as pear.conf is (noreplace)
-current=$(%{_bindir}/pear config-get temp_dir system)
-if [ "$current" == "/var/tmp" ]; then
-%{_bindir}/pear config-set \
-    temp_dir %{_localstatedir}/tmp/php-pear \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get test_dir system)
-if [ "$current" != "%{_datadir}/tests/pear" ]; then
-%{_bindir}/pear config-set \
-    test_dir %{_datadir}/tests/pear \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get data_dir system)
-if [ "$current" != "%{_datadir}/pear-data" ]; then
-%{_bindir}/pear config-set \
-    data_dir %{_datadir}/pear-data \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get metadata_dir system)
-if [ "$current" != "%{metadir}" ]; then
-%{_bindir}/pear config-set \
-    metadata_dir %{metadir} \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get -c pecl doc_dir system)
-if [ "$current" != "%{_docdir}/pecl" ]; then
-%{_bindir}/pear config-set \
-    -c pecl \
-    doc_dir %{_docdir}/pecl \
-    system >/dev/null || :
-fi
-
-current=$(%{_bindir}/pear config-get -c pecl test_dir system)
-if [ "$current" != "%{_datadir}/tests/pecl" ]; then
-%{_bindir}/pear config-set \
-    -c pecl \
-    test_dir %{_datadir}/tests/pecl \
-    system >/dev/null || :
-fi
-
-%{_bindir}/pear config-set \
-    php_ini %{_scl_root}/etc/php.d/zzzzzzz-pecl.ini \
-    system >/dev/null || :
+%include ${SOURCE32}
 
 # preserve local pear INI on file name change (Note that .rpmsave won't exist at this point)
 if [ $1 -eq 2 -a "%{version}-%{release_prefix}" == "1.10.1-11" -a -s %{_scl_root}/etc/php.d/02-pecl.ini ] ; then
@@ -282,9 +235,7 @@ if [ ! -e "/usr/local/bin/pear" ]; then
 fi
 
 %postun
-if [ $1 -eq 0 -a -d %{metadir}/.registry ] ; then
-  rm -rf %{metadir}/.registry
-fi
+%include ${SOURCE31}
 
 # Remove with EA3
 if [ $1 -eq 0 -a -h "/usr/local/bin/pear" -a "$(readlink /usr/local/bin/pear)" = "%{_bindir}/pear" ]; then

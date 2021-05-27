@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ $1 -eq 0 -a -d %{metadir}/.registry ] ; then
+  rm -rf %{metadir}/.registry
+fi

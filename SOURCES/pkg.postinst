@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# force new value for these items
+current=$(%{_bindir}/pear config-get temp_dir system)
+if [ "$current" == "/var/tmp" ]; then
+%{_bindir}/pear config-set \
+    temp_dir %{_localstatedir}/tmp/php-pear \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get test_dir system)
+if [ "$current" != "%{_datadir}/tests/pear" ]; then
+%{_bindir}/pear config-set \
+    test_dir %{_datadir}/tests/pear \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get data_dir system)
+if [ "$current" != "%{_datadir}/pear-data" ]; then
+%{_bindir}/pear config-set \
+    data_dir %{_datadir}/pear-data \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get metadata_dir system)
+if [ "$current" != "%{metadir}" ]; then
+%{_bindir}/pear config-set \
+    metadata_dir %{metadir} \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get -c pecl doc_dir system)
+if [ "$current" != "%{_docdir}/pecl" ]; then
+%{_bindir}/pear config-set \
+    -c pecl \
+    doc_dir %{_docdir}/pecl \
+    system >/dev/null || :
+fi
+
+current=$(%{_bindir}/pear config-get -c pecl test_dir system)
+if [ "$current" != "%{_datadir}/tests/pecl" ]; then
+%{_bindir}/pear config-set \
+    -c pecl \
+    test_dir %{_datadir}/tests/pecl \
+    system >/dev/null || :
+fi
+
+%{_bindir}/pear config-set \
+    php_ini %{_scl_root}/etc/php.d/zzzzzzz-pecl.ini \
+    system >/dev/null || :

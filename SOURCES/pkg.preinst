@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Manage relocation of metadata, before update to pear
+if [ -d %{peardir}/.registry -a ! -d %{metadir}/.registry ]; then
+  mkdir -p %{metadir}
+  mv -f %{peardir}/.??* %{metadir}
+fi
