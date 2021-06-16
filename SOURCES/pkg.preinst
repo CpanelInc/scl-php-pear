@@ -5,7 +5,7 @@
 # we can not yet use them in the spec until ZC-8893 does ^^^
 
 # Manage relocation of metadata, before update to pear
-if [ -d $peardir/.registry -a ! -d $metadir/.registry ]; then
+if [ -d $peardir/.registry ] && [ ! -d $metadir/.registry ]; then
   mkdir -p $metadir
   mv -f $peardir/.??* $metadir
 fi

@@ -4,6 +4,6 @@
 # no mechanism for that in SPEC yet, also looks in debian/ and not <macro>.debian/
 # we can not yet use them in the spec until ZC-8893 does ^^^
 
-if [ $1 -eq 0 -a -d $metadir/.registry ] ; then
+if [ -d $metadir/.registry ] ; then
   rm -rf $metadir/.registry
 fi
