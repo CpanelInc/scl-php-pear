@@ -10,7 +10,7 @@
         "scl-utils-build",
         "scl-utils",
         "autotools-latest-autoconf",
-        "%scl-runtime"
+        "%scl_runtime"
     ],
     "add_to_sources": [
         "PEAR*.tgz"
