@@ -52,3 +52,18 @@ fi
 $_bindir/pear config-set \
     php_ini $_scl_root/etc/php.d/zzzzzzz-pecl.ini \
     system >/dev/null || :
+
+# preserve local pear INI on file name change (Note that .rpmsave won't exist at this point)
+if [ "${version}-${release_prefix}" == "1.10.1-11" -a -s ${_scl_root}/etc/php.d/02-pecl.ini ] ; then
+    echo "Preserving INI from 02-pecl.ini to zzzzzzz-pecl.ini";
+    cp -f ${_scl_root}/etc/php.d/02-pecl.ini ${_scl_root}/etc/php.d/zzzzzzz-pecl.ini;
+    echo -n "" >  ${_scl_root}/etc/php.d/02-pecl.ini; # preserving times does not avoid .rpmsave since those changed when data was added post-install :/
+fi
+
+# Remove with EA3
+# Stopgap measure to ensure that the cPanel interface for PEAR works
+# on new servers that never had EA3 installed.
+if [ ! -e "/usr/local/bin/pear" ]; then
+    ln -s ${_bindir}/pear /usr/local/bin/pear;
+fi
+
