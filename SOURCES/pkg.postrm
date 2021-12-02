@@ -6,25 +6,32 @@
 
 # We need to delete the registry only on removal or purge
 
-delete_registry=""
+is_uninstall=""
+
+# in the rpm case
 if [ "$1" == "0" ]; then
-    # Delete the registry, in the rpm case on removal
-    delete_registry="yes"
+    is_uninstall="yes"
 fi
 
+# in the deb case on removal
 if [ "$1" == "remove" ]; then
-    # Delete the registry, in the deb case on removal
-    delete_registry="yes"
+    is_uninstall="yes"
 fi
 
+# in the deb case if they call for a purge
 if [ "$1" == "purge" ]; then
-    # Delete the registry, in the deb case if they call for a purge
-    delete_registry="yes"
+    is_uninstall="yes"
 fi
 
-if [ "$delete_registry" == "yes" ]; then
+if [ "$is_uninstall" == "yes" ]; then
     if [ -d $metadir/.registry ] ; then
-      rm -rf $metadir/.registry
+        rm -rf $metadir/.registry
+    fi
+
+    # Remove with EA3
+    if [ $1 -eq 0 -a -h "/usr/local/bin/pear" -a "$(readlink /usr/local/bin/pear)" = "$_bindir/pear" ]; then
+        echo "Removing pear symlink: /usr/local/bin/pear";
+        rm /usr/local/bin/pear;
     fi
 fi
 
