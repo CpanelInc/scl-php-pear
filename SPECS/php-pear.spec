@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.12
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -278,7 +278,7 @@ fi
 # Stopgap measure to ensure that the cPanel interface for PEAR works
 # on new servers that never had EA3 installed.
 if [ ! -e "/usr/local/bin/pear" ]; then
-    ln -s %{_bindir}/pear /usr/local/bin/pear;
+    ln -f -s %{_bindir}/pear /usr/local/bin/pear;
 fi
 
 %postun
@@ -328,6 +328,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Thu Dec 02 2021 Dan Muey <dan@cpanel.net> - 1.10.12-3
+- ZC-9547: Account for `/usr/local/bin/pear` target missing
+
 * Mon Nov 08 2021 Julian Brown <julian.brown@cpanel.net> - 1.10.12-2
 - ZC-8130: Build for ea-php81
 
