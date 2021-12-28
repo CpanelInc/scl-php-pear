@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.12
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 3
+%define release_prefix 4
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -328,6 +328,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Tue Dec 28 2021 Dan Muey <dan@cpanel.net> - 1.10.12-4
+- ZC-9589: Update DISABLE_BUILD to match OBS
+
 * Thu Dec 02 2021 Dan Muey <dan@cpanel.net> - 1.10.12-3
 - ZC-9547: Account for `/usr/local/bin/pear` target missing
 
