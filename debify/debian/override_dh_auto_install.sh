@@ -75,13 +75,16 @@ install -m 644 *.xml $DEB_INSTALL_ROOT$metadir/pkgxml
 
 mkdir -p ./debian/tmp/$_scl_root/usr/share/doc/$scl_name-pear-$version
 mkdir -p ./debian/tmp/$_scl_root/usr/share/licenses/$scl_name-pear-$version
+mkdir -p ./debian/tmp/$_scl_root/usr/share/doc/$scl_name-pear
+mkdir -p ./debian/tmp/$_scl_root/usr/share/licenses/$scl_name-pear
 mkdir -p ./debian/tmp/$_scl_root/var/cache/php-pear
 mkdir -p ./debian/tmp/$_scl_root/var/tmp/php-pear
 
 cp -n ./debian/tmp/$_scl_root/usr/share/doc/pear/PEAR/README.rst ./debian/tmp/$_scl_root/usr/share/doc/$scl_name-pear-$version/README.rst
 cp -n ./LICENSE* ./debian/tmp/$_scl_root/usr/share/licenses/$scl_name-pear-$version
 
-
+cp -n ./debian/tmp/$_scl_root/usr/share/doc/pear/PEAR/README.rst ./debian/tmp/$_scl_root/usr/share/doc/$scl_name-pear/README.rst
+cp -n ./LICENSE* ./debian/tmp/$_scl_root/usr/share/licenses/$scl_name-pear
 
 echo "FILELIST"
 find . -type f -print
