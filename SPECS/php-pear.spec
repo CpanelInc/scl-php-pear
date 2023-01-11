@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.12
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 6
+%define release_prefix 7
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -328,6 +328,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Mon Jan 09 2023 Brian Mendoza <brian.mendoza@cpanel.net> - 1.10.12-7
+- ZC-10585: Build for CentOS7
+
 * Fri Oct 14 2022 Brian Mendoza <brian.mendoza@cpanel.net> - 1.10.12-6
 - ZC-10359: Fix ea-php82 ubuntu build
 
