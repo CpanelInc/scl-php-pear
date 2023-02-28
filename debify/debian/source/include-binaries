@@ -1,5 +1,5 @@
-debian/SOURCES_FROM_SPEC/PEAR-1.10.12.tgz
+debian/SOURCES_FROM_SPEC/PEAR-1.10.13.tgz
 debian/SOURCES_FROM_SPEC/XML_Util-1.4.5.tgz
-debian/SOURCES_FROM_SPEC/Archive_Tar-1.4.9.tgz
+debian/SOURCES_FROM_SPEC/Archive_Tar-1.4.14.tgz
 debian/SOURCES_FROM_SPEC/Console_Getopt-1.4.3.tgz
 debian/SOURCES_FROM_SPEC/Structures_Graph-1.1.1.tgz
