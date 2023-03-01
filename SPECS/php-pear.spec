@@ -19,9 +19,9 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
-Version: 1.10.12
+Version: 1.10.13
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 6
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -42,7 +42,7 @@ Source11: pecl.sh
 Source12: peardev.sh
 Source13: c6headers.sh
 
-Source21: Archive_Tar-1.4.9.tgz
+Source21: Archive_Tar-1.4.14.tgz
 Source22: Console_Getopt-1.4.3.tgz
 Source23: Structures_Graph-1.1.1.tgz
 Source24: XML_Util-1.4.5.tgz
@@ -73,8 +73,8 @@ Requires:  %{?scl_prefix}php-zlib
 Requires:  %{?scl_prefix}php-devel
 
 Provides:  %{?scl_prefix}php-pear(Console_Getopt) = 1.4.3
-Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.9
-Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.12
+Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.14
+Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.13
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
 Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.4.5
 
@@ -328,6 +328,17 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Thu Feb 23 2023 Cory McIntire <cory@cpanel.net> - 1.10.13-1
+- EA-11201: Update PEAR and its dependencies
+- Update PEAR from 1.10.12 to 1.10.13
+- Update Archive_Tar from 1.4.9 to 1.4.14
+- Filename manipulation vulnerabilities (CVE-2020-28948 / CVE-2020-28949)
+- Symlink out-of-path write vulnerability (CVE-2020-36193)
+- Properly fix symbolic link path traversal (CVE-2021-32610)
+
+* Mon Jan 09 2023 Brian Mendoza <brian.mendoza@cpanel.net> - 1.10.12-7
+- ZC-10585: Build for CentOS7
+
 * Fri Oct 14 2022 Brian Mendoza <brian.mendoza@cpanel.net> - 1.10.12-6
 - ZC-10359: Fix ea-php82 ubuntu build
 
