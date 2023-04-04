@@ -4,6 +4,7 @@
         "libargon2-1",
         "libargon2-dev",
         "libedit-dev",
+        "tzdata",
         "libedit2"
     ],
     "remove_from_requires": [

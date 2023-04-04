@@ -21,7 +21,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.13
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -328,6 +328,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Tue Apr 04 2023 Julian Brown <julian.brown@cpanel.net> - 1.10.13-3
+- ZC-10047: Build on Ubuntu 22, exclude other OS's
+
 * Fri Mar 10 2023 Tim Mullin <tim@cpanel.net> - 1.10.13-2
 - EA-11253: Ensure zzzzzzz-pecl.ini is marked as a config file on debian based systems
 
