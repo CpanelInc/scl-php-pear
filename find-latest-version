@@ -1,0 +1,65 @@
+#!/usr/local/cpanel/3rdparty/bin/perl
+# cpanel - find-latest-version                  Copyright(c) 2023 cPanel, L.L.C.
+#                                                           All rights Reserved.
+# copyright@cpanel.net                                         http://cpanel.net
+# This code is subject to the cPanel license. Unauthorized copying is prohibited
+#
+# This provides incremental updates to existing packages in EasyApache4.
+package scl_php_pear::find_latest_version;
+
+use strict;
+use warnings;
+
+use lib "../ea-tools/lib/ea4_tool";    # assumes ea-tools is checked out next to this repo
+use ea4_tool::util ();
+
+ea4_tool::util::find_latest_version( \&_get_required, \&_add_sum ) if !caller();
+
+###############
+#### helpers ##
+###############
+
+sub _get_required {
+    my ($http) = @_;
+
+    my $res = $http->get("https://pear.php.net/package/PEAR/download/All");
+    if ( !$res->{success} ) {
+        die "Could not GET PEAR dist page ($res->{status} $res->{reason})\n";
+    }
+
+    my @pear_versions = sort { _cmp_versions( $b, $a ) } ( $res->{content} =~ m{href="http://download\.pear\.php\.net/package/PEAR-([0-9.]+)\.tgz}g );
+    if ( !@pear_versions ) {
+        die "Could not find PEAR versions\n";
+    }
+
+    my $version = $pear_versions[0];
+    my $name    = "PEAR-$version.tgz";
+    my $url     = "http://download.pear.php.net/package/$name";
+
+    return ( $version, $url, $name );
+}
+
+sub _add_sum {
+    my ( $http, $hr ) = @_;
+
+    # Not currently supported for PEAR downloads
+    return;
+}
+
+sub _cmp_versions {
+    my ( $left, $right ) = @_;
+    my ( $maj,  $min, $rev, $sup ) = split /[\._]/, $left;
+    my ( $mj,   $mn,  $rv,  $sp )  = split /[\._]/, $right;
+
+    # avoid unitialized value warnings
+    $maj //= -1;
+    $min //= -1;
+    $rev //= -1;
+    $sup //= -1;
+    $mj  //= -1;
+    $mn  //= -1;
+    $rv  //= -1;
+    $sp  //= -1;
+
+    return $maj <=> $mj || $min <=> $mn || $rev <=> $rv || $sup <=> $sp;
+}
