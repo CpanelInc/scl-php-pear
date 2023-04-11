@@ -1,0 +1,305 @@
+#!/usr/local/cpanel/3rdparty/bin/perl
+# cpanel - ea4-tool-post-update                 Copyright(c) 2023 cPanel, L.L.C.
+#                                                           All rights Reserved.
+# copyright@cpanel.net                                         http://cpanel.net
+# This code is subject to the cPanel license. Unauthorized copying is prohibited
+
+package scl_php_pear::ea4_tool_post_update;
+
+use strict;
+use warnings;
+
+use lib "../ea-tools/lib/ea4_tool";    # assumes ea-tools is checked out next to this repo
+use ea4_tool::util ();
+use File::chdir;
+use Path::Tiny;
+
+my $include_binaries_file = 'debify/debian/source/include-binaries';
+
+exit( run(@ARGV) ? 0 : 1 ) if !caller;
+
+sub run {
+    my ( $old_ver, $new_ver ) = @_;
+
+    my $git = ea4_tool::util::git($CWD);
+
+    my $spec       = ea4_tool::util::specfile($CWD);
+    my @spec_lines = path($spec)->lines;
+
+    # Get the latest version info for each PEAR dependency
+    my $archive_tar_latest_version_info      = find_latest_version_for_archive_tar();
+    my $structures_graph_latest_version_info = find_latest_version_for_structures_graph();
+    my $xml_util_latest_version_info         = find_latest_version_for_xml_util();
+
+    # Get the current version info for each PEAR dependency
+    my ( $current_archive_tar_version, $current_structures_graph_version, $current_xml_util_version ) = get_current_version( \@spec_lines );
+
+    # Update the tarball and spec file for any new versions
+    update_tarball(
+        {
+            git         => $git,
+            spec        => $spec,
+            spec_lines  => \@spec_lines,
+            current_ver => $current_archive_tar_version,
+            latest_hr   => $archive_tar_latest_version_info,
+            name        => 'Archive_Tar',
+        }
+    );
+
+    update_tarball(
+        {
+            git         => $git,
+            spec        => $spec,
+            spec_lines  => \@spec_lines,
+            current_ver => $current_structures_graph_version,
+            latest_hr   => $structures_graph_latest_version_info,
+            name        => 'Structures_Graph',
+        }
+    );
+
+    update_tarball(
+        {
+            git         => $git,
+            spec        => $spec,
+            spec_lines  => \@spec_lines,
+            current_ver => $current_xml_util_version,
+            latest_hr   => $xml_util_latest_version_info,
+            name        => 'XML_Util',
+        }
+    );
+
+    update_pear_provides_line(
+        {
+            git        => $git,
+            spec       => $spec,
+            spec_lines => \@spec_lines,
+            old_ver    => $old_ver,
+            new_ver    => $new_ver,
+        }
+    );
+
+    print "Pushing changes up\n";
+
+    my $branch = $git->current_branch();
+    ea4_tool::util::pushup( $git, $branch );
+
+    print "Done!\n";
+    return 1;
+}
+
+sub _cmp_versions {
+    my ( $left, $right ) = @_;
+    my ( $maj,  $min, $rev, $sup ) = split /[\._]/, $left;
+    my ( $mj,   $mn,  $rv,  $sp )  = split /[\._]/, $right;
+
+    # avoid unitialized value warnings
+    $maj //= -1;
+    $min //= -1;
+    $rev //= -1;
+    $sup //= -1;
+    $mj  //= -1;
+    $mn  //= -1;
+    $rv  //= -1;
+    $sp  //= -1;
+
+    return $maj <=> $mj || $min <=> $mn || $rev <=> $rv || $sup <=> $sp;
+}
+
+sub _add_sum {
+    my ( $http, $hr ) = @_;
+
+    # Not currently supported for PEAR downloads
+    return;
+}
+
+sub _get_required_for_generic {
+    my ( $http, $dependency_name, $get, $regex ) = @_;
+
+    my $res = $http->get($get);
+    if ( !$res->{success} ) {
+        die "Could not GET dist page ($res->{status} $res->{reason})\n";
+    }
+
+    my @versions = sort { _cmp_versions( $b, $a ) } ( $res->{content} =~ m{$regex}g );
+
+    my $version = $versions[0];
+    my $name    = "$dependency_name-$version.tgz";
+    my $url     = "http://download.pear.php.net/package/$name";
+
+    return ( $version, $url, $name );
+}
+
+sub find_latest_version_for_archive_tar {
+    return ea4_tool::util::find_latest_version( \&_get_required_for_archive_tar, \&_add_sum );
+}
+
+sub _get_required_for_archive_tar {
+    my ($http) = @_;
+
+    my $name  = 'Archive_Tar';
+    my $get   = 'https://pear.php.net/package/Archive_Tar/download/All';
+    my $regex = qr{href="http://download\.pear\.php\.net/package/Archive_Tar-([0-9.]+)\.tgz};
+
+    return _get_required_for_generic( $http, $name, $get, $regex );
+}
+
+sub find_latest_version_for_structures_graph {
+    return ea4_tool::util::find_latest_version( \&_get_required_for_structures_graph, \&_add_sum );
+}
+
+sub _get_required_for_structures_graph {
+    my ($http) = @_;
+
+    my $name  = 'Structures_Graph';
+    my $get   = 'https://pear.php.net/package/Structures_Graph/download/All';
+    my $regex = qr{href="http://download\.pear\.php\.net/package/Structures_Graph-([0-9.]+)\.tgz};
+
+    return _get_required_for_generic( $http, $name, $get, $regex );
+}
+
+sub find_latest_version_for_xml_util {
+    return ea4_tool::util::find_latest_version( \&_get_required_for_xml_util, \&_add_sum );
+}
+
+sub _get_required_for_xml_util {
+    my ($http) = @_;
+
+    my $name  = 'XML_Util';
+    my $get   = 'https://pear.php.net/package/XML_Util/download/All';
+    my $regex = qr{http://download\.pear\.php\.net/package/XML_Util-([0-9.]+)\.tgz};
+
+    return _get_required_for_generic( $http, $name, $get, $regex );
+}
+
+sub get_current_version {
+    my ($spec_lines) = @_;
+
+    my ( $current_archive_tar_version, $current_structures_graph_version, $current_xml_util_version );
+    foreach my $line (@$spec_lines) {
+        $current_archive_tar_version      = $1 if $line =~ m{Archive_Tar-([0-9.]+)\.tgz};
+        $current_structures_graph_version = $1 if $line =~ m{Structures_Graph-([0-9.]+)\.tgz};
+        $current_xml_util_version         = $1 if $line =~ m{XML_Util-([0-9.]+)\.tgz};
+
+        last if $current_archive_tar_version && $current_structures_graph_version && $current_xml_util_version;
+    }
+
+    die "Unable to find Archive_Tar version\n"      unless $current_archive_tar_version;
+    die "Unable to find Structures_Graph version\n" unless $current_structures_graph_version;
+    die "Unable to find XML_Util version\n"         unless $current_xml_util_version;
+
+    return ( $current_archive_tar_version, $current_structures_graph_version, $current_xml_util_version );
+}
+
+sub update_tarball {
+    my ($args) = @_;
+
+    my $git         = $args->{git};
+    my $spec        = $args->{spec};
+    my $spec_lines  = $args->{spec_lines};
+    my $current_ver = $args->{current_ver};
+    my $latest_hr   = $args->{latest_hr};
+    my $name        = $args->{name};
+
+    my $new_version      = $latest_hr->{version};
+    my $new_tarball      = $latest_hr->{tarball}{name};
+    my $tarball_location = "SOURCES/$new_tarball";
+
+    return unless _cmp_versions( $new_version, $current_ver ) == 1;
+
+    my $old_tarball;
+    foreach my $line (@$spec_lines) {
+        if ( $line =~ m{^Source[0-9]+:\s+(\Q$name\E-\Q$current_ver\E\.tgz)} ) {
+            $old_tarball = $1;
+            $line =~ s/\Q$current_ver\E/$new_version/;
+        }
+        elsif ( $line =~ /^Provides:\s+\%\{\?scl_prefix\}php-pear\(\Q$name\E\)\s+=\s+$current_ver\s*$/ ) {
+            $line = "Provides:  %{?scl_prefix}php-pear($name) = $new_version\n";
+        }
+    }
+
+    die "Unable to find old tarball location for $name\n" unless $old_tarball;
+
+    print "Updating $name tarball version from $current_ver to $new_version\n";
+
+    my $response = ea4_tool::util::http()->mirror( $latest_hr->{tarball}{url}, $tarball_location );
+    die "Unable to download the tarball ($latest_hr->{tarball}{url})" if ( !$response->{success} );
+    die "304 received when attempting to download the tarball, this is likely due to the tarball being downloaded too many times in a short period of time.  Please try again later or have someone else run this command.\n"
+      if ( $response->{status} == 304 );
+
+    path($spec)->spew(@$spec_lines);
+
+    _update_include_binaries( $name, $current_ver, $new_version );
+
+    _add_commit( $git, $spec, $name, $old_tarball, $new_tarball );
+
+    return;
+}
+
+sub _update_include_binaries {
+    my ( $name, $old_ver, $new_ver ) = @_;
+
+    print "Updating include-binaries file for ubuntu\n";
+
+    my @lines = path($include_binaries_file)->lines;
+    foreach my $line (@lines) {
+        if ( $line =~ /\Q$name\E-\Q$old_ver\E/ ) {
+            $line =~ s/\Q$old_ver\E/$new_ver/;
+        }
+    }
+
+    path($include_binaries_file)->spew(@lines);
+
+    return;
+}
+
+sub _add_commit {
+    my ( $git, $spec, $name, $old, $new ) = @_;
+
+    print "Adding commit for updated $name tarball\n";
+
+    $git->run( add => "SOURCES/$new" );
+    $git->run( rm  => "SOURCES/$old" ) unless $old eq $new;
+
+    $git->run( add => $spec );
+    $git->run( add => $include_binaries_file );
+
+    my $branch = $git->current_branch();
+    $git->run( commit => "-m", "$branch: ea4-tool-post-update update $name tarball to latest version" );
+
+    return;
+}
+
+sub update_pear_provides_line {
+    my ($args) = @_;
+
+    my $git        = $args->{git};
+    my $spec       = $args->{spec};
+    my $spec_lines = $args->{spec_lines};
+    my $old_ver    = $args->{old_ver};
+    my $new_ver    = $args->{new_ver};
+
+    print "Updating Provides line for PEAR\n";
+
+    foreach my $line (@$spec_lines) {
+        if ( $line =~ /^Provides:\s+\%\{\?scl_prefix\}php-pear\(PEAR\)\s+=\s+$old_ver\s*$/ ) {
+            $line = "Provides:  %{?scl_prefix}php-pear(PEAR) = $new_ver\n";
+            last;
+        }
+    }
+
+    path($spec)->spew(@$spec_lines);
+
+    _update_include_binaries( 'PEAR', $old_ver, $new_ver );
+
+    print "Adding commit for updated Provides line for PEAR\n";
+
+    $git->run( add => $spec );
+    $git->run( add => $include_binaries_file );
+
+    my $branch = $git->current_branch();
+    $git->run( commit => "-m", "$branch: ea4-tool-post-update update Provides line for PEAR to $new_ver" );
+
+    return;
+}
+
+1;
