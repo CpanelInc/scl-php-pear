@@ -1,5 +1,3 @@
-%define debug_package %{nil}
-
 %{?scl:%global _scl_prefix /opt/cpanel}
 %{?scl:%scl_package %{scl}-pear}
 %{?scl:BuildRequires: scl-utils-build}
