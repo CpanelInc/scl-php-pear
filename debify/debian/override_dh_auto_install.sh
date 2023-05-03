@@ -31,8 +31,6 @@ install -d $DEB_INSTALL_ROOT$peardir \
            $DEB_INSTALL_ROOT$_sysconfdir/pear \
            $DEB_INSTALL_ROOT$_sysconfdir/php.d
 export INSTALL_ROOT=$DEB_INSTALL_ROOT
-pwd
-$phpbin --version
 $phpbin -dmemory_limit=64M -dshort_open_tag=0 -dsafe_mode=0 \
          -d 'error_reporting=E_ALL&~E_DEPRECATED' -ddetect_unicode=0 \
          install-pear.php --force \
@@ -47,6 +45,7 @@ $phpbin -dmemory_limit=64M -dshort_open_tag=0 -dsafe_mode=0 \
                  --data     $_datadir/pear-data \
                  --metadata $metadir \
                  *.tgz
+
 install -m 755 $SOURCE10 $DEB_INSTALL_ROOT$_bindir/pear
 # Set up autoconf and autoheader for PHP73 and C6 use
 install -m 755 $SOURCE11 $DEB_INSTALL_ROOT$_bindir/pecl
@@ -62,6 +61,7 @@ for exe in pear pecl peardev; do
     sed -e "s: /usr: $_prefix:" \
         -i $DEB_INSTALL_ROOT$_bindir/$exe
 done
+
 # Sanitize the pear.conf
 $phpbin $SOURCE3 $DEB_INSTALL_ROOT$_sysconfdir/pear.conf ext_dir >new-pear.conf
 $phpbin $SOURCE3 new-pear.conf http_proxy > $DEB_INSTALL_ROOT$_sysconfdir/pear.conf
