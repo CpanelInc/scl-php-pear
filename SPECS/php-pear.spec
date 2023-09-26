@@ -19,7 +19,7 @@ Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
 Version: 1.10.13
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 3
+%define release_prefix 5
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -49,7 +49,6 @@ Source30: sanity_check.sh
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{?scl_prefix}php-cli
 BuildRequires: %{?scl_prefix}php-xml
 BuildRequires: gnupg
 
@@ -326,6 +325,12 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Mon Nov 27 2023 Julian Brown <julian.brown@cpanel.net> - 1.10.13-5
+- ZC-11184, ZC-11175: Add support for PHP 8.3
+
+* Thu Sep 21 2023 Dan Muey <dan@cpanel.net> - 1.10.13-4
+- ZC-11194: Remove unnecessary `BuildRequires` of php-cli
+
 * Tue Apr 04 2023 Julian Brown <julian.brown@cpanel.net> - 1.10.13-3
 - ZC-10047: Build on Ubuntu 22, exclude other OS's
 
