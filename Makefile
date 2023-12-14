@@ -1,5 +1,5 @@
 OBS_PROJECT := EA4
-scl-php83-pear-obs : DISABLE_BUILD += repository=CentOS_6.5_standard repository=CentOS_7
+scl-php83-pear-obs : DISABLE_BUILD += repository=CentOS_6.5_standard
 scl-php82-pear-obs : DISABLE_BUILD += repository=CentOS_6.5_standard
 scl-php81-pear-obs : DISABLE_BUILD += repository=CentOS_6.5_standard
 scl-php80-pear-obs : DISABLE_BUILD += repository=CentOS_6.5_standard repository=xUbuntu_22.04
