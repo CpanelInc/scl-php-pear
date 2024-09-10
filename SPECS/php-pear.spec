@@ -50,6 +50,7 @@ Source30: sanity_check.sh
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-xml
+BuildRequires: %{?scl_prefix}php-cli
 BuildRequires: gnupg
 
 # phpci detected extension
