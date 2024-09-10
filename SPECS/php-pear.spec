@@ -138,6 +138,17 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
 pwd
 %{_bindir}/php --version
 
+mkdir -p $RPM_BUILD_ROOT/%{peardir}
+mkdir -p $RPM_BUILD_ROOT/%{_localstatedir}/cache/php-pear
+mkdir -p $RPM_BUILD_ROOT/%{_localstatedir}/tmp/php-pear/cache
+mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/pear
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/%{_localstatedir}/www/html
+mkdir -p $RPM_BUILD_ROOT/%{_docdir}/pear
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/tests/pear
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/pear-data
+mkdir -p $RPM_BUILD_ROOT/%{metadir}
+
 %{_bindir}/php -dmemory_limit=64M -dshort_open_tag=0 -dsafe_mode=0 \
          -d 'error_reporting=E_ALL&~E_DEPRECATED' -ddetect_unicode=0 \
          install-pear.php --force \
