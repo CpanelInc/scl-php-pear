@@ -17,9 +17,9 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
-Version: 1.10.13
+Version: 1.10.15
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 7
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -72,7 +72,7 @@ Requires:  %{?scl_prefix}php-devel
 
 Provides:  %{?scl_prefix}php-pear(Console_Getopt) = 1.4.3
 Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.14
-Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.13
+Provides:  %{?scl_prefix}php-pear(PEAR) = %{version}
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
 Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.4.5
 
@@ -337,6 +337,9 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Thu Sep 12 2024 Dan Muey <dan@cpanel.net> - 1.10.15-1
+- EA-12381: Update scl-php-pear from v1.10.13 to v1.10.15
+
 * Tue Sep 03 2024 Dan Muey <dan@cpanel.net> - 1.10.13-7
 - ZC-12147: Make zzzzzzz-pecl.ini a config file in debs for 8.3
 - fix some build issues
