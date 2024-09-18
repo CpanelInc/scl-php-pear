@@ -17,9 +17,9 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl}-pear
-Version: 1.10.13
+Version: 1.10.15
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4568 for more details
-%define release_prefix 6
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 
 # PEAR, Archive_Tar, XML_Util are BSD
@@ -50,6 +50,7 @@ Source30: sanity_check.sh
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-xml
+BuildRequires: %{?scl_prefix}php-cli
 BuildRequires: gnupg
 
 # phpci detected extension
@@ -71,7 +72,7 @@ Requires:  %{?scl_prefix}php-devel
 
 Provides:  %{?scl_prefix}php-pear(Console_Getopt) = 1.4.3
 Provides:  %{?scl_prefix}php-pear(Archive_Tar) = 1.4.14
-Provides:  %{?scl_prefix}php-pear(PEAR) = 1.10.13
+Provides:  %{?scl_prefix}php-pear(PEAR) = %{version}
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = 1.1.1
 Provides:  %{?scl_prefix}php-pear(XML_Util) = 1.4.5
 
@@ -136,6 +137,17 @@ install -d $RPM_BUILD_ROOT%{peardir} \
 export INSTALL_ROOT=$RPM_BUILD_ROOT
 pwd
 %{_bindir}/php --version
+
+mkdir -p $RPM_BUILD_ROOT/%{peardir}
+mkdir -p $RPM_BUILD_ROOT/%{_localstatedir}/cache/php-pear
+mkdir -p $RPM_BUILD_ROOT/%{_localstatedir}/tmp/php-pear/cache
+mkdir -p $RPM_BUILD_ROOT/%{_sysconfdir}/pear
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/%{_localstatedir}/www/html
+mkdir -p $RPM_BUILD_ROOT/%{_docdir}/pear
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/tests/pear
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/pear-data
+mkdir -p $RPM_BUILD_ROOT/%{metadir}
 
 %{_bindir}/php -dmemory_limit=64M -dshort_open_tag=0 -dsafe_mode=0 \
          -d 'error_reporting=E_ALL&~E_DEPRECATED' -ddetect_unicode=0 \
@@ -325,6 +337,13 @@ fi
 /usr/bin/%{scl}-pecl
 
 %changelog
+* Thu Sep 12 2024 Dan Muey <dan@cpanel.net> - 1.10.15-1
+- EA-12381: Update scl-php-pear from v1.10.13 to v1.10.15
+
+* Tue Sep 03 2024 Dan Muey <dan@cpanel.net> - 1.10.13-7
+- ZC-12147: Make zzzzzzz-pecl.ini a config file in debs for 8.3
+- fix some build issues
+
 * Thu Dec 14 2023 Julian Brown <julian.brown@cpanel.net> - 1.10.13-6
 - ZC-11475: Support for ea-php83 on CentOS 7
 
